@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model auth_group {
+  groupId           Int                 @id @default(autoincrement())
+  groupName         String?             @unique(map: "groupName") @db.VarChar(64)
+  groupLevel        Int                 @default(255) @db.UnsignedTinyInt
+  auth_group_access auth_group_access[]
+  auth_user_group   auth_user_group[]
+
+  @@index([groupLevel], map: "groupLevel")
+}
+
+model auth_group_access {
+  gracGroupId     Int
+  gracAllowedPath String     @db.VarChar(32)
+  auth_group      auth_group @relation(fields: [gracGroupId], references: [groupId], onDelete: Cascade, map: "gracGroupId")
+
+  @@id([gracGroupId, gracAllowedPath])
+  @@index([gracGroupId], map: "gracGroupId")
+}
+
+model auth_user {
+  userId               Int               @id @default(autoincrement())
+  userName             String?           @unique(map: "userName") @db.VarChar(64)
+  password             String?           @db.VarChar(64)
+  userTimestampCreates DateTime          @default(now()) @db.Timestamp(0)
+  userLastAccess       DateTime?         @db.Timestamp(0)
+  auth_user_group      auth_user_group[]
+
+  @@index([userName, password], map: "userName_2")
+}
+
+model auth_user_group {
+  userName   String     @db.VarChar(64)
+  groupId    Int
+  auth_group auth_group @relation(fields: [groupId], references: [groupId], onDelete: Cascade, map: "usgrGroupId")
+  auth_user  auth_user  @relation(fields: [userName], references: [userName], onDelete: Cascade, map: "usgrUserName")
+
+  @@id([userName, groupId])
+  @@index([groupId], map: "groupId")
+  @@index([userName], map: "userName")
+}
