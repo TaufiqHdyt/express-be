@@ -9,6 +9,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start:win": "SET DEBUG=express-be:* & nodemon --expose-gc ./bin/www.js",
     "start:dev": "DEBUG=express-be:* nodemon --expose-gc ./bin/www.js",
     "start:prod": "node --expose-gc ./bin/www.js"
   },
@@ -21,19 +22,22 @@
     "#controller/*": "./src/controllers/*"
   },
   "dependencies": {
-    "@prisma/client": "4.2.1",
-    "bcrypt": "^5.0.1",
+    "@prisma/client": "4.4.0",
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "debug": "~4.3.4",
     "express": "^5.0.0-beta.1",
-    "helmet": "^5.1.0",
+    "helmet": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.10.0",
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19",
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
-    "prisma": "^4.2.1"
+    "prisma": "^4.4.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed/index.js"
   }
 }

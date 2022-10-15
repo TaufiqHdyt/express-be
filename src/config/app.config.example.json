@@ -12,7 +12,8 @@
     "rejectEmpty": true
   },
   "jwt": {
-    "secret": "secret-app-be-dharma",
+    "secret": "secret-app-express-prisma",
+    "refreshSecret": "secret-refresh-app-express-prisma",
     "expired": 18000000
   },
   "public": {

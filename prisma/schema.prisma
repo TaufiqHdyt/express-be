@@ -3,47 +3,64 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider                = "mysql"
+  url                     = env("DATABASE_URL")
 }
 
-model auth_group {
-  groupId           Int                 @id @default(autoincrement())
-  groupName         String?             @unique(map: "groupName") @db.VarChar(64)
-  groupLevel        Int                 @default(255) @db.UnsignedTinyInt
-  auth_group_access auth_group_access[]
-  auth_user_group   auth_user_group[]
+model User {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  email           String?           @unique
+  password        String?
+  lastLogin       DateTime?         @updatedAt
 
-  @@index([groupLevel], map: "groupLevel")
+  // Relation Fields
+  userRole        UserRole[]
 }
 
-model auth_group_access {
-  gracGroupId     Int
-  gracAllowedPath String     @db.VarChar(32)
-  auth_group      auth_group @relation(fields: [gracGroupId], references: [groupId], onDelete: Cascade, map: "gracGroupId")
+model Role {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
 
-  @@id([gracGroupId, gracAllowedPath])
-  @@index([gracGroupId], map: "gracGroupId")
+  // Relation Fields
+  userRole        UserRole[]
+  access          Access[]
 }
 
-model auth_user {
-  userId               Int               @id @default(autoincrement())
-  userName             String?           @unique(map: "userName") @db.VarChar(64)
-  password             String?           @db.VarChar(64)
-  userTimestampCreates DateTime          @default(now()) @db.Timestamp(0)
-  userLastAccess       DateTime?         @db.Timestamp(0)
-  auth_user_group      auth_user_group[]
-
-  @@index([userName, password], map: "userName_2")
+model UserRole {
+  // Relation Fields
+  user            User              @relation(fields: [userName], references: [name], onDelete: Cascade, onUpdate: Cascade)
+  userName        String            @id
+  role            Role              @relation(fields: [roleName], references: [name], onDelete: Cascade, onUpdate: Cascade)
+  roleName        String
 }
 
-model auth_user_group {
-  userName   String     @db.VarChar(64)
-  groupId    Int
-  auth_group auth_group @relation(fields: [groupId], references: [groupId], onDelete: Cascade, map: "usgrGroupId")
-  auth_user  auth_user  @relation(fields: [userName], references: [userName], onDelete: Cascade, map: "usgrUserName")
+model Access {
+  path            String            @unique
 
-  @@id([userName, groupId])
-  @@index([groupId], map: "groupId")
-  @@index([userName], map: "userName")
+  // Relation Fields
+  role            Role              @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roleId          Int
+}
+
+model Inquiry {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+
+  // Relation Fields
+  message         Contact[]
+}
+
+model Contact {
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name            String
+  email           String
+  phone           String
+  message         String            @db.Text
+
+  // Relation Fields
+  inquiry         Inquiry           @relation(fields: [inquiryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  inquiryId       Int
 }
