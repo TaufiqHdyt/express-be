@@ -5,14 +5,7 @@ const roleData = [
   },
   {
     name: 'User',
-  },
-  {
-    name: 'Guest',
-    path: [
-      '/api/inquiry',
-      '/api/contact',
-      '/feed',
-    ],
+    path: ['/api/todo'],
   },
 ];
 

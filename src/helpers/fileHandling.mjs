@@ -54,7 +54,6 @@ class _fileHandling {
 
   remove = async (req, res, next) => {
     try {
-      console.log(req.query);
       const { type, fileName } = req.query;
       await fs.unlink(path.join(__dirname, `/public/img/${type}/${fileName}`));
       next()

@@ -1,6 +1,6 @@
 const userData = [
   {
-    name: 'Taufiq Hidayat',
+    name: 'Admin',
     role: 'admin',
   },
 ];

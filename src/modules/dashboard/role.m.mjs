@@ -20,6 +20,9 @@ class _role {
             })),
           },
         },
+        select: {
+          name: true,
+        },
       });
       return {
         status: true,

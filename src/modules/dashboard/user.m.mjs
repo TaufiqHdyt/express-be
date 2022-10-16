@@ -5,26 +5,6 @@ class _user {
   list = async (query = {}) => {
     try {
       const { detail, roleName } = query;
-      const galleries =
-        Number(detail) === 1
-          ? {
-              galleries: {
-                select: {
-                  title: true,
-                },
-              },
-            }
-          : {};
-      const projects =
-        Number(detail) === 1
-          ? {
-              projects: {
-                select: {
-                  title: true,
-                },
-              },
-            }
-          : {};
       const users = await db.user.findMany({
         where: {
           userRole: {
@@ -45,18 +25,14 @@ class _user {
               roleName: true,
             },
           },
-          ...galleries,
-          ...projects,
         },
       });
       return {
         status: true,
-        data: users?.map(({ id, name, userRole: [{ roleName }], galleries, projects }) => ({
+        data: users?.map(({ id, name, userRole: [{ roleName }] }) => ({
           id,
           name,
           role: roleName,
-          galleries: galleries?.map(({ title }) => title),
-          projects: projects?.map(({ title }) => title),
         })),
       };
     } catch (error) {
@@ -77,11 +53,6 @@ class _user {
         select: {
           name: true,
           email: true,
-          profile: {
-            select: {
-              bio: true,
-            },
-          },
         },
       });
       return {
@@ -157,21 +128,11 @@ class _user {
         data: {
           name,
           email,
-          profile: {
-            update: {
-              bio,
-            },
-          },
         },
         select: {
           id: true,
           name: true,
           email: true,
-          profile: {
-            select: {
-              bio: true,
-            },
-          },
         },
       });
       return {
@@ -180,7 +141,6 @@ class _user {
           id: update.id,
           name: update.name,
           email: update.email,
-          bio: update.profile.bio,
         },
       };
     } catch (error) {

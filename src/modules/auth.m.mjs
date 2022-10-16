@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 class _auth {
   register = async (body = {}) => {
     try {
-      const { name, email, password } = body;
+      const { name, email, password, role } = body;
 
       const check = await db.user.findUnique({
         where: {
@@ -45,8 +45,17 @@ class _auth {
             email,
             password: pw,
             userRole: {
-              connect: {
-                userName: name,
+              connectOrCreate: {
+                where: {
+                  userName: name,
+                },
+                create: {
+                  role: {
+                    connect: {
+                      name: role ?? 'User',
+                    },
+                  },
+                },
               },
             },
           },
