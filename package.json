@@ -22,7 +22,7 @@
     "#controller/*": "./src/controllers/*"
   },
   "dependencies": {
-    "@prisma/client": "4.4.0",
+    "@prisma/client": "4.5.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "debug": "~4.3.4",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
-    "prisma": "^4.4.0"
+    "prisma": "^4.5.0"
   },
   "prisma": {
     "seed": "node prisma/seed/index.js"
