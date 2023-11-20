@@ -18,4 +18,4 @@
 ## Requirements
 
 - Node LTS
-- PNPM 7
+- PNPM Latest
